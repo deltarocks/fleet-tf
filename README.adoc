@@ -1,0 +1,13 @@
+= Terraform nix integration
+
+WIP
+
+Originally intended for use with https://github.com/CertainLach/fleet, now I'm trying to split and make it work as a standalone project.
+
+Fleet will still provide better integration.
+
+== Differences from other nix-terraform projects
+
+Replaces lockfile management:: fleet-tf is able to generate lockfiles for you based solely on nix package management.
+
+Uses normal nixos modules:: fleet-tf asks terraform for function/provider metadata, and generates nixos modules (throught use of IFDs), with fallback for untyped module generation. Nixos documentation generators also just work.

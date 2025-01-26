@@ -1,0 +1,60 @@
+diff --git a/internal/command/init.go b/internal/command/init.go
+index 8a223f95b7..59817fcafe 100644
+--- a/internal/command/init.go
++++ b/internal/command/init.go
+@@ -507,6 +508,11 @@ func (c *InitCommand) getProviders(ctx context.Context, config *configs.Config,
+ 	ctx, span := tracer.Start(ctx, "install providers")
+ 	defer span.End()
+ 
++	_, overridden := os.LookupEnv("NIX_TERRAFORM_LOCKFILE")
++	if overridden {
++		flagLockfile = "readonly"
++	}
++
+ 	// Dev overrides cause the result of "terraform init" to be irrelevant for
+ 	// any overridden providers, so we'll warn about it to avoid later
+ 	// confusion when Terraform ends up using a different provider than the
+diff --git a/internal/command/meta_dependencies.go b/internal/command/meta_dependencies.go
+index e7f213e43d..8e29bcabf6 100644
+--- a/internal/command/meta_dependencies.go
++++ b/internal/command/meta_dependencies.go
+@@ -50,12 +50,22 @@ func (m *Meta) lockedDependencies() (*depsfile.Locks, tfdiags.Diagnostics) {
+ 	// with no locks. There is in theory a race condition here in that
+ 	// the file could be created or removed in the meantime, but we're not
+ 	// promising to support two concurrent dependency installation processes.
+-	_, err := os.Stat(dependencyLockFilename)
++	file := dependencyLockFilename
++
++	override, overridden := os.LookupEnv("NIX_TERRAFORM_LOCKFILE")
++	if overridden {
++		file = override
++	}
++
++	_, err := os.Stat(file)
+ 	if os.IsNotExist(err) {
++		if overridden {
++			log.Fatal("NIX_TERRAFORM_LOCKFILE override is invalid")
++		}
+ 		return m.annotateDependencyLocksWithOverrides(depsfile.NewLocks()), nil
+ 	}
+ 
+-	ret, diags := depsfile.LoadLocksFromFile(dependencyLockFilename)
++	ret, diags := depsfile.LoadLocksFromFile(file)
+ 	return m.annotateDependencyLocksWithOverrides(ret), diags
+ }
+ 
+@@ -63,6 +73,11 @@ func (m *Meta) lockedDependencies() (*depsfile.Locks, tfdiags.Diagnostics) {
+ // current working directory to contain the information recorded in the given
+ // locks object.
+ func (m *Meta) replaceLockedDependencies(new *depsfile.Locks) tfdiags.Diagnostics {
++	_, overridden := os.LookupEnv("NIX_TERRAFORM_LOCKFILE")
++	if overridden {
++		log.Fatalf("NIX_TERRAFORM_LOCKFILE is present, refusing to update lockfile")
++	}
++
+ 	return depsfile.SaveLocksToFile(new, dependencyLockFilename)
+ }
+ 
+-- 
+2.47.0
+

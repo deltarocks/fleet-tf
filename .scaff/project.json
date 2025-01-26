@@ -1,0 +1,10 @@
+{
+	"codeOwner": "Yaroslav Bolyukin <iam@lach.pw>",
+	"license": [
+		"MIT"
+	],
+	"projectName": "fleet terraform integration",
+	"haveCredentials": false,
+	"projectDescription": "Fleet terraform integration",
+	"firstRunCompleted": true
+}

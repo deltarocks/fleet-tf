@@ -1,0 +1,64 @@
+{
+  "nodes": {
+    "flake-parts": {
+      "inputs": {
+        "nixpkgs-lib": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1736143030,
+        "narHash": "sha256-+hu54pAoLDEZT9pjHlqL9DNzWz0NbUn8NEAHP7PQPzU=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "b905f6fc23a9051a6e1b741e1438dbfc0634c6de",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1737911523,
+        "narHash": "sha256-NFHwOjJ//xwYmMIug0TAZNeYQhjy3e69vA4BvagPJ2k=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "aa5c2aa4dfc11fdf68c50cbc431ccf6f3747e60f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "release-24.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "flake-parts": "flake-parts",
+        "nixpkgs": "nixpkgs",
+        "shelly": "shelly"
+      }
+    },
+    "shelly": {
+      "locked": {
+        "lastModified": 1737089050,
+        "narHash": "sha256-SQ22z9L7fSC8FWNIlImpKeBGBUPoWpsTy9uc75o7uK0=",
+        "owner": "CertainLach",
+        "repo": "shelly",
+        "rev": "b5fa6bb56dcd1541ec399ceab1e95a74872ecd34",
+        "type": "github"
+      },
+      "original": {
+        "owner": "CertainLach",
+        "repo": "shelly",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
