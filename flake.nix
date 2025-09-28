@@ -19,6 +19,7 @@
 
       flake.mkFlakeModules.terraform = file: (builtins.fromJSON (builtins.readFile file));
       flake.lib.mkFunctions = file: import ./function.nix inputs.nixpkgs.lib (builtins.fromJSON (builtins.readFile file));
+      flake.lib.nixpkgsLib = inputs.nixpkgs.lib;
 
       perSystem = {
         self',
@@ -29,6 +30,8 @@
       }: {
         _module.args.pkgs = import inputs.nixpkgs {
           inherit system;
+          # Defaulting to terraform, due to dumb opentofu registry policy restricting
+          # access from certain contries.
           config.allowUnfreePredicate = pkg: lib.getName pkg == "terraform";
         };
 
@@ -39,6 +42,11 @@
           };
           terraform-locked = pkgs.callPackage ./nix/terraform-locked.nix {
             inherit (self'.packages) terraform-lockfile;
+            providers = p: [p.pass];
+          };
+          terraform-functions = pkgs.callPackage ./nix/terraform-functions.nix {};
+          terraform-providers = pkgs.callPackage ./nix/terraform-providers.nix {
+            inherit (self'.packages) terraform-locked;
           };
         };
 

@@ -11,7 +11,7 @@
       ${lib.getExe terraform-calculator} "-provider-path=${providersDirectory}" "-source-address=${attrs.provider-source-address}" "-version=${attrs.version}" > $out
     '';
 in
-  runCommand ".terraform.lock.hcl" {} (concatMapStringsSep "\n\n" (
+  runCommand ".terraform.lock.hcl" {} ("touch $out\n\n" + (concatMapStringsSep "\n\n" (
       pkg: let
         hash-drv = hashOfPackage' pkg;
       in ''
@@ -26,4 +26,4 @@ in
         echo "}" >> $out
       ''
     )
-    providers)
+    providers))

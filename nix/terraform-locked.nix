@@ -21,6 +21,9 @@
 in
   runCommand "terraform-with-plugins" {
     nativeBuildInputs = [makeWrapper];
+    passthru.providers = realProviders;
+
+    meta.mainProgram = "terraform";
   } ''
     mkdir -p $out/bin/
     makeWrapper "${terraform-wrapped}/bin/terraform" "$out/bin/terraform" \
