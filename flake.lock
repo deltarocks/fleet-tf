@@ -7,11 +7,10 @@
         ]
       },
       "locked": {
-        "lastModified": 1743550720,
-        "narHash": "sha256-hIshGgKZCgWh6AYJpJmRgFdR3WUbkY04o82X05xqQiY=",
+        "lastModified": 1756770412,
         "owner": "hercules-ci",
         "repo": "flake-parts",
-        "rev": "c621e8422220273271f52058f618c94e405bb0f5",
+        "rev": "4524271976b625a4a605beefd893f270620fd751",
         "type": "github"
       },
       "original": {
@@ -22,16 +21,15 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1745868005,
-        "narHash": "sha256-hZScOyQphT4RUmSEJX+2OxjIlGgLwSd8iW1LNtAWIOs=",
+        "lastModified": 1759068310,
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "330d0a4167924b43f31cc9406df363f71b768a02",
+        "rev": "546fae9062c4830bb237353266d9acaa0da40ff2",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "release-24.11",
+        "ref": "release-25.05",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -45,11 +43,10 @@
     },
     "shelly": {
       "locked": {
-        "lastModified": 1737089050,
-        "narHash": "sha256-SQ22z9L7fSC8FWNIlImpKeBGBUPoWpsTy9uc75o7uK0=",
+        "lastModified": 1756323923,
         "owner": "CertainLach",
         "repo": "shelly",
-        "rev": "b5fa6bb56dcd1541ec399ceab1e95a74872ecd34",
+        "rev": "b5dd29a500db04f54a9f1c2bf81cdd84df8b0cd7",
         "type": "github"
       },
       "original": {
