@@ -13,6 +13,7 @@
   outputs =
     inputs:
     inputs.flake-parts.lib.mkFlake { inherit inputs; } (
+      { self, ... }:
       let
         mkTerraformModule = file: import ./tf.nix (builtins.fromJSON (builtins.readFile file));
       in
@@ -29,21 +30,26 @@
           file: import ./function.nix inputs.nixpkgs.lib (builtins.fromJSON (builtins.readFile file));
         flake.lib.nixpkgsLib = inputs.nixpkgs.lib;
 
+        flake.overlays.default = pkgs: prev: {
+          terraform-calculator = pkgs.callPackage ./nix/terraform-calculator.nix { };
+          terraform-lockfile = pkgs.callPackage ./nix/lockfile.nix {
+            inherit (pkgs) terraform-calculator;
+          };
+          terraform-locked = pkgs.callPackage ./nix/terraform-locked.nix {
+            inherit (pkgs) terraform-lockfile;
+          };
+          terraform-functions-json = pkgs.callPackage ./nix/terraform-functions.nix { };
+          terraform-providers-json = pkgs.callPackage ./nix/terraform-providers.nix {
+            inherit (pkgs) terraform-locked;
+          };
+        };
+
         tf =
           { config, ... }:
           {
             providers.pass = {
               package = p: p.camptocamp_pass;
               default = { };
-            };
-
-            data.pass_password = {
-              test = {
-                path = "secret/foo";
-              };
-              test2 = {
-                path = config.data.pass_password.test.data "key";
-              };
             };
           };
 
@@ -61,27 +67,23 @@
               # Defaulting to terraform, due to dumb opentofu registry policy restricting
               # access from certain contries.
               config.allowUnfreePredicate = pkg: lib.getName pkg == "terraform";
+
+              overlays = [ self.overlays.default ];
             };
 
             packages = {
-              terraform-calculator = pkgs.callPackage ./nix/terraform-calculator.nix { };
-              terraform-lockfile = pkgs.callPackage ./nix/lockfile.nix {
-                inherit (self'.packages) terraform-calculator;
-              };
-              terraform-locked = pkgs.callPackage ./nix/terraform-locked.nix {
-                inherit (self'.packages) terraform-lockfile;
-                providers = p: [ p.pass ];
-              };
-              terraform-functions = pkgs.callPackage ./nix/terraform-functions.nix { };
-              terraform-providers = pkgs.callPackage ./nix/terraform-providers.nix {
-                inherit (self'.packages) terraform-locked;
-              };
+              inherit (pkgs)
+                terraform-calculator
+                terraform-lockfile
+                terraform-locked
+                terraform-functions-json
+                terraform-providers-json
+                ;
             };
 
             shelly.shells.default = {
               packages = with pkgs; [
                 jq
-                (self'.packages.terraform-locked.override { providers = p: [ p.pass ]; })
               ];
 
               environment.NIX_FMT = lib.getExe self'.formatter;

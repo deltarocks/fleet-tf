@@ -103,7 +103,7 @@ in
         ...
       }:
       let
-        terraform = config.tf.config.finalPackage;
+        terraform = config.tf.config.finalPackage pkgs;
       in
       {
         packages.tf-doc = pkgs.runCommand "tf-options-doc.md" { } ''
