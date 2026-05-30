@@ -1,9 +1,154 @@
+From 71b957e5c6882524fdd5f3487a2c9a54d2b0a887 Mon Sep 17 00:00:00 2001
+From: Yaroslav Bolyukin <iam@lach.pw>
+Date: Sat, 30 May 2026 19:00:32 +0200
+Subject: [PATCH] feat: hard lockfile
+
+Change-Id: I68237ce84d6db176ef373d522a6c74956a6a6964
+Signed-off-by: Yaroslav Bolyukin <iam@lach.pw>
+---
+ 0001-Prepare-before-1.15.3-release.patch | 116 +++++++++++++++++++++++
+ internal/command/init.go                 |   6 ++
+ internal/command/meta_dependencies.go    |  19 +++-
+ internal/command/meta_providers.go       |   5 +
+ 4 files changed, 144 insertions(+), 2 deletions(-)
+ create mode 100644 0001-Prepare-before-1.15.3-release.patch
+
+diff --git a/0001-Prepare-before-1.15.3-release.patch b/0001-Prepare-before-1.15.3-release.patch
+new file mode 100644
+index 0000000000..4b832bf212
+--- /dev/null
++++ b/0001-Prepare-before-1.15.3-release.patch
+@@ -0,0 +1,116 @@
++From 94363314099a4b374a521f19fa43aa4f09cc5da9 Mon Sep 17 00:00:00 2001
++From: hc-github-team-tf-core <github-team-tf-core@hashicorp.com>
++Date: Wed, 13 May 2026 07:33:44 +0000
++Subject: [PATCH] Prepare before 1.15.3 release
++
++---
++ .changes/1.15.3.md                            | 12 ++++++++++
++ .changes/v1.15/BUG FIXES-20260505-181549.yaml |  5 -----
++ .changes/v1.15/BUG FIXES-20260507-120732.yaml |  5 -----
++ .changes/v1.15/BUG FIXES-20260512-125801.yaml |  5 -----
++ CHANGELOG.md                                  | 22 ++++++++++---------
++ version/VERSION                               |  2 +-
++ 6 files changed, 25 insertions(+), 26 deletions(-)
++ create mode 100644 .changes/1.15.3.md
++ delete mode 100644 .changes/v1.15/BUG FIXES-20260505-181549.yaml
++ delete mode 100644 .changes/v1.15/BUG FIXES-20260507-120732.yaml
++ delete mode 100644 .changes/v1.15/BUG FIXES-20260512-125801.yaml
++
++diff --git a/.changes/1.15.3.md b/.changes/1.15.3.md
++new file mode 100644
++index 0000000000..e99eddbb7c
++--- /dev/null
+++++ b/.changes/1.15.3.md
++@@ -0,0 +1,12 @@
+++## 1.15.3 (May 13, 2026)
+++
+++
+++BUG FIXES:
+++
+++* stacks: Fixed a bug that prevented migrating resources under multiple layers of module nesting with implicit provider configuration. ([#38528](https://github.com/hashicorp/terraform/issues/38528))
+++
+++* cloud backend will now forward -generate-config-out flag usage to query create request ([#38539](https://github.com/hashicorp/terraform/issues/38539))
+++
+++* Fix crash during provider installation when there is no config ([#38560](https://github.com/hashicorp/terraform/issues/38560))
+++
+++
++diff --git a/.changes/v1.15/BUG FIXES-20260505-181549.yaml b/.changes/v1.15/BUG FIXES-20260505-181549.yaml
++deleted file mode 100644
++index 0243d61c46..0000000000
++--- a/.changes/v1.15/BUG FIXES-20260505-181549.yaml	
+++++ /dev/null
++@@ -1,5 +0,0 @@
++-kind: BUG FIXES
++-body: 'stacks: Fixed a bug that prevented migrating resources under multiple layers of module nesting with implicit provider configuration.'
++-time: 2026-05-05T18:15:49.425645-04:00
++-custom:
++-    Issue: "38528"
++diff --git a/.changes/v1.15/BUG FIXES-20260507-120732.yaml b/.changes/v1.15/BUG FIXES-20260507-120732.yaml
++deleted file mode 100644
++index ef22c1218a..0000000000
++--- a/.changes/v1.15/BUG FIXES-20260507-120732.yaml	
+++++ /dev/null
++@@ -1,5 +0,0 @@
++-kind: BUG FIXES
++-body: cloud backend will now forward -generate-config-out flag usage to query create request
++-time: 2026-05-07T12:07:32.23956-07:00
++-custom:
++-    Issue: "38539"
++diff --git a/.changes/v1.15/BUG FIXES-20260512-125801.yaml b/.changes/v1.15/BUG FIXES-20260512-125801.yaml
++deleted file mode 100644
++index 66e9052e7c..0000000000
++--- a/.changes/v1.15/BUG FIXES-20260512-125801.yaml	
+++++ /dev/null
++@@ -1,5 +0,0 @@
++-kind: BUG FIXES
++-body: Fix crash during provider installation when there is no config
++-time: 2026-05-12T12:58:01.257167+02:00
++-custom:
++-    Issue: "38560"
++diff --git a/CHANGELOG.md b/CHANGELOG.md
++index 34fcdb6e75..908f1dbaec 100644
++--- a/CHANGELOG.md
+++++ b/CHANGELOG.md
++@@ -1,3 +1,15 @@
+++## 1.15.3 (May 13, 2026)
+++
+++
+++BUG FIXES:
+++
+++* stacks: Fixed a bug that prevented migrating resources under multiple layers of module nesting with implicit provider configuration. ([#38528](https://github.com/hashicorp/terraform/issues/38528))
+++
+++* cloud backend will now forward -generate-config-out flag usage to query create request ([#38539](https://github.com/hashicorp/terraform/issues/38539))
+++
+++* Fix crash during provider installation when there is no config ([#38560](https://github.com/hashicorp/terraform/issues/38560))
+++
+++
++ ## 1.15.2 (May 6, 2026)
++ 
++ 
++@@ -121,16 +133,6 @@ UPGRADE NOTES:
++ * backend/s3: The `AWS_USE_FIPS_ENDPOINT` and `AWS_USE_DUALSTACK_ENDPOINT` environment variables now only respect `true` or `false` values, aligning with the AWS SDK for Go. This replaces the previous behavior which treated any non-empty value as `true`. ([#37601](https://github.com/hashicorp/terraform/issues/37601))
++ 
++ 
++-EXPERIMENTS:
++-
++-Experiments are only enabled in alpha releases of Terraform CLI. The following features are not yet available in stable releases.
++-
++-- The experimental "deferred actions" feature, enabled by passing the `-allow-deferral` option to `terraform plan`, permits `count` and `for_each` arguments in `module`, `resource`, and `data` blocks to have unknown values and allows providers to react more flexibly to unknown values.
++-- `terraform test cleanup`: The experimental `test cleanup` command. In experimental builds of Terraform, a manifest file and state files for each failed cleanup operation during test operations are saved within the `.terraform` local directory. The `test cleanup` command will attempt to clean up the local state files left behind automatically, without requiring manual intervention.
++-- `terraform test`: `backend` blocks and `skip_cleanup` attributes:
++-  - Test authors can now specify `backend` blocks within `run` blocks in Terraform Test files. Run blocks with `backend` blocks will load state from the specified backend instead of starting from empty state on every execution. This allows test authors to keep long-running test infrastructure alive between test operations, saving time during regular test operations.
++-  - Test authors can now specify `skip_cleanup` attributes within test files and within run blocks. The `skip_cleanup` attribute tells `terraform test` not to clean up state files produced by run blocks with this attribute set to true. The state files for affected run blocks will be written to disk within the `.terraform` directory, where they can then be cleaned up manually using the also experimental `terraform test cleanup` command.
++-
++ ## Previous Releases
++ 
++ For information on prior major and minor releases, refer to their changelogs:
++diff --git a/version/VERSION b/version/VERSION
++index 827d8d6a3b..f2380cc7ae 100644
++--- a/version/VERSION
+++++ b/version/VERSION
++@@ -1 +1 @@
++-1.15.2-dev
+++1.15.3
++-- 
++2.54.0
++
 diff --git a/internal/command/init.go b/internal/command/init.go
-index 114ce62..453aff0 100644
+index c13c3bfdeb..2b34f0fce6 100644
 --- a/internal/command/init.go
 +++ b/internal/command/init.go
-@@ -371,6 +371,11 @@ func (c *InitCommand) getProviders(ctx context.Context, config *configs.Config,
- 	ctx, span := tracer.Start(ctx, "install providers")
+@@ -8,6 +8,7 @@ import (
+ 	"fmt"
+ 	"log"
+ 	"maps"
++	"os"
+ 	"reflect"
+ 	"slices"
+ 	"sort"
+@@ -363,6 +364,11 @@ func (c *InitCommand) getProvidersFromConfig(ctx context.Context, config *config
+ 	ctx, span := tracer.Start(ctx, "install providers from config")
  	defer span.End()
  
 +	_, overridden := os.LookupEnv("NIX_TERRAFORM_LOCKFILE")
@@ -15,7 +160,7 @@ index 114ce62..453aff0 100644
  	// any overridden providers, so we'll warn about it to avoid later
  	// confusion when Terraform ends up using a different provider than the
 diff --git a/internal/command/meta_dependencies.go b/internal/command/meta_dependencies.go
-index b84afec..fdad941 100644
+index febe06d9e5..10f5642de0 100644
 --- a/internal/command/meta_dependencies.go
 +++ b/internal/command/meta_dependencies.go
 @@ -50,12 +50,22 @@ func (m *Meta) lockedDependencies() (*depsfile.Locks, tfdiags.Diagnostics) {
@@ -56,10 +201,10 @@ index b84afec..fdad941 100644
  }
  
 diff --git a/internal/command/meta_providers.go b/internal/command/meta_providers.go
-index 9d8bd27..14d8cbc 100644
+index fde640485c..638b857580 100644
 --- a/internal/command/meta_providers.go
 +++ b/internal/command/meta_providers.go
-@@ -111,6 +111,11 @@ func (m *Meta) providerCustomLocalDirectorySource(dirs []string) getproviders.So
+@@ -113,6 +113,11 @@ func (m *Meta) providerCustomLocalDirectorySource(dirs []string) getproviders.So
  // Only one object returned from this method should be live at any time,
  // because objects inside contain caches that must be maintained properly.
  func (m *Meta) providerLocalCacheDir() *providercache.Dir {
@@ -71,3 +216,6 @@ index 9d8bd27..14d8cbc 100644
  	m.fixupMissingWorkingDir()
  	dir := m.WorkingDir.ProviderLocalCacheDir()
  	return providercache.NewDir(dir)
+-- 
+2.54.0
+
